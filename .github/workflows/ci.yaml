@@ -1,4 +1,4 @@
-name: CI/CD - Docker Build & Push
+name: CI/CD - Docker Build & Push image into Docker hub
 
 on:
   push:
@@ -29,9 +29,7 @@ jobs:
         run: echo "test pass for now .... "
       - name: conventional Commit checks
         uses: webiny/action-conventional-commits@v1.3.0
-        with:
-          allowed-commit-types: "feat,fix,docs,style,refactor,test,chore,ci,perf,revert"
-
+        
   docker-build-and-push:
     needs: test-and-validate
     if: github.event_name == 'push'
@@ -66,7 +64,7 @@ jobs:
         id: tags
         run: |
           if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
-            echo "tag=prodv${{ steps.vars.outputs.sha3 }}" >> $GITHUB_OUTPUT
+            echo "tag=v1.0.1" >> $GITHUB_OUTPUT
           else
             echo "tag=dev${{ steps.vars.outputs.sha3 }}" >> $GITHUB_OUTPUT
           fi
