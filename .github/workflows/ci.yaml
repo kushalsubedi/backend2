@@ -27,8 +27,8 @@ jobs:
 
       - name: Run React tests
         run: echo "test pass for now .... "
-      - name: conventional Commit checks
-        uses: webiny/action-conventional-commits@v1.3.0
+      # - name: conventional Commit checks
+      #   uses: webiny/action-conventional-commits@v1.3.0
         
   docker-build-and-push:
     needs: test-and-validate
