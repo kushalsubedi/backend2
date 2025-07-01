@@ -32,10 +32,25 @@ jobs:
       - name: Install commitlint
         run: npm install --no-save @commitlint/config-conventional @commitlint/cli
 
-      - name: Validate PR commit messages
+      - name: Validate Conventional Commit Messages
         run: |
-          COMMITS=$(git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%s")
-          echo "$COMMITS" | npx commitlint
+          set -e
+          BASE_BRANCH="${{ github.base_ref || 'main' }}"
+          echo "Comparing commits from origin/$BASE_BRANCH to HEAD..."
+
+          CONVENTIONAL_REGEX="^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)(\\([a-z0-9-]+\\))?: .+"
+
+          COMMITS=$(git log origin/$BASE_BRANCH..HEAD --pretty=format:"%s")
+          echo "$COMMITS" | while IFS= read -r COMMIT; do
+            if [[ ! "$COMMIT" =~ $CONVENTIONAL_REGEX ]]; then
+              echo "::error ::❌ Non-conforming commit: \"$COMMIT\""
+              exit 1
+            else
+              echo "✅ $COMMIT"
+            fi
+          done
+
+          echo "✅ All commit messages follow Conventional Commits."
         
   docker-build-and-push:
     needs: test-and-validate
