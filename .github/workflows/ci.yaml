@@ -29,9 +29,7 @@ jobs:
         run: echo "test pass for now .... "
       - name: conventional Commit checks
         uses: webiny/action-conventional-commits@v1.3.0
-        with:
-          allowed-commit-types: "feat,fix,docs,style,refactor,test,chore,ci,perf,revert"
-
+        
   docker-build-and-push:
     needs: test-and-validate
     if: github.event_name == 'push'
